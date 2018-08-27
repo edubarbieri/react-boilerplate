@@ -2,9 +2,10 @@ const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const dev = process.env.NODE_ENV !== 'production';
-
+const port = process.env.PORT || 8080;
 module.exports = {
 	mode: dev ? 'development' : 'production',
 	entry: './src/index.jsx',
@@ -49,6 +50,11 @@ module.exports = {
 		}),
 		new MiniCssExtractPlugin({
 			filename: dev ? '[name].css' : '[name].[hash:5].css',
+		}),
+		new FriendlyErrorsWebpackPlugin({
+			compilationSuccessInfo: {
+				messages: ['You application is running here http://localhost:' + port]
+			}
 		})
 	],
 	optimization: {
@@ -59,5 +65,9 @@ module.exports = {
 			}),
 			new OptimizeCSSAssetsPlugin({})
 		]
+	},
+	devServer: {
+		quiet: true,
+		port: port
 	}
 };
